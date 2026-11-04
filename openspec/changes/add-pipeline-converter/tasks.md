@@ -34,13 +34,13 @@
 
 ## 6. Chain tool UI
 
-- [ ] 6.1 Build the Chain workspace layout (input, chain, output) as a size container with three columns at 1024 px of content width and wider, stacked below, and verify by hand at 375 px, 1100 px (stacked with the sidebar expanded), and 1440 px that there is no horizontal scroll
-- [ ] 6.2 Build step cards with status badge, generic option controls, enable toggle, remove, up/down buttons, native drag and drop, and expandable peek, wired to live evaluation (150 ms input debounce), and verify by hand that the editing scenarios in `specs/pipeline-workspace` behave as described
-- [ ] 6.3 Build the add-step control and the Ctrl/Cmd+K picker dialog with multi-word filtering and keyboard navigation, and verify by hand that typing `b64 dec` + Enter appends Base64 decode
-- [ ] 6.4 Build the output box: read-only text, binary label with hex preview, error display, copy with toast, and swap to input, and verify by hand with `/9j/4A==` → [Base64 decode] that it shows "binary, 4 bytes" and `ff d8 ff e0`
-- [ ] 6.5 Wire session restore on startup, and verify by hand that a reload restores the chain and input and the output recomputes
-- [ ] 6.6 Add "Save as template" to the Chain toolbar (disabled for an empty chain, blank name rejected, overwrite confirmation, storage error message), and verify by hand that a saved template appears under Chain in the sidebar
-- [ ] 6.7 Handle `?template=<id>` in Chain: load the template (keeping the input), snapshot the previous chain for a 6 s Undo toast, show "template not found" for unknown ids and an unavailable notice for templates with unknown steps, then `replaceState` to `#/chain`, and verify by hand that loading, Undo, and a reload after loading behave per `specs/pipeline-templates` and `specs/app-navigation`
+- [x] 6.1 Build the Chain workspace layout (input, chain, output) as a size container with three columns at 1024 px of content width and wider, stacked below, and verify by hand at 375 px, 1100 px (stacked with the sidebar expanded), and 1440 px that there is no horizontal scroll
+- [x] 6.2 Build step cards with status badge, generic option controls, enable toggle, remove, up/down buttons, native drag and drop, and expandable peek, wired to live evaluation (150 ms input debounce), and verify by hand that the editing scenarios in `specs/pipeline-workspace` behave as described
+- [x] 6.3 Build the add-step control and the Ctrl/Cmd+K picker dialog with multi-word filtering and keyboard navigation, and verify by hand that typing `b64 dec` + Enter appends Base64 decode
+- [x] 6.4 Build the output box: read-only text, binary label with hex preview, error display, copy with toast, and swap to input, and verify by hand with `/9j/4A==` → [Base64 decode] that it shows "binary, 4 bytes" and `ff d8 ff e0`
+- [x] 6.5 Wire session restore on startup, and verify by hand that a reload restores the chain and input and the output recomputes
+- [x] 6.6 Add "Save as template" to the Chain toolbar (disabled for an empty chain, blank name rejected, overwrite confirmation, storage error message), and verify by hand that a saved template appears under Chain in the sidebar
+- [x] 6.7 Handle `?template=<id>` in Chain: load the template (keeping the input), snapshot the previous chain for a 6 s Undo toast, show "template not found" for unknown ids and an unavailable notice for templates with unknown steps, then `replaceState` to `#/chain`, and verify by hand that loading, Undo, and a reload after loading behave per `specs/pipeline-templates` and `specs/app-navigation`
 
 ## 7. Privacy, budget, and deploy checks
 
