@@ -8,8 +8,8 @@
 
 ## 2. Core value and pipeline engine
 
-- [ ] 2.1 Implement the `Value` type with `asText` (fatal UTF-8), `asBytes`, and the hex preview helper, and verify unit tests cover valid and invalid UTF-8 plus the 256-byte preview cap
-- [ ] 2.2 Implement `StepDef` and `StepInstance` types, the step registry, and `evaluate(input, steps)` with ok/error/skipped/disabled results, and verify table-driven unit tests cover an empty chain, a disabled step pass-through, error-then-skip, and recovery
+- [x] 2.1 Implement the `Value` type with `asText` (fatal UTF-8), `asBytes`, and the hex preview helper, and verify unit tests cover valid and invalid UTF-8 plus the 256-byte preview cap
+- [x] 2.2 Implement `StepDef` and `StepInstance` types, the step registry, and `evaluate(input, steps)` with ok/error/skipped/disabled results, and verify table-driven unit tests cover an empty chain, a disabled step pass-through, error-then-skip, and recovery
 
 ## 3. Converters
 
