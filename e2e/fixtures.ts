@@ -29,3 +29,36 @@ export const test = base.extend<{ pageErrors: string[] }>({
 });
 
 export { expect };
+
+/** Appends a step through the picker, as a keyboard user would. */
+export async function addStep(page: Page, query: string): Promise<void> {
+  await page.getByTestId('add-step').click();
+  await page.getByTestId('picker-input').fill(query);
+  await page.keyboard.press('Enter');
+}
+
+export function stepNames(page: Page) {
+  return page.getByTestId('step').locator('h3');
+}
+
+export async function setInput(page: Page, value: string): Promise<void> {
+  await page.getByTestId('input').fill(value);
+}
+
+/** Saves the current chain as a template, confirming overwrite if asked. */
+export async function saveTemplate(page: Page, name: string): Promise<void> {
+  await page.getByTestId('save-template').click();
+  const dialog = page.getByTestId('dialog');
+  await dialog.locator('input').fill(name);
+  await dialog.locator('input').press('Enter');
+}
+
+export function templateLinks(page: Page) {
+  return page.getByTestId('sidebar').getByTestId('template-row').locator('.link');
+}
+
+export async function openTemplateMenu(page: Page, name: string): Promise<void> {
+  const row = page.getByTestId('template-row').filter({ hasText: name });
+  await row.hover();
+  await row.getByRole('button', { name: `Actions for ${name}` }).click();
+}
