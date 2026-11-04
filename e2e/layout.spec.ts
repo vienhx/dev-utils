@@ -82,7 +82,7 @@ test('mobile drawer picks a template and closes', async ({ page }) => {
   await page.setViewportSize({ width: 375, height: 800 });
   await page.goto('/#/chain');
   await addStep(page, 'pretty');
-  await page.getByTestId('save-template').click();
+  await page.getByTestId('save-as').click();
   await page.getByTestId('dialog').locator('input').fill('Phone');
   await page.getByTestId('dialog').locator('input').press('Enter');
   await page.getByTestId('remove').click();

@@ -4,7 +4,7 @@
   import { getStep } from '../../core/registry';
   import { createStep, type StepDef, type StepInstance } from '../../core/step';
   import { text } from '../../core/value';
-  import { askConfirm, askText } from '../../shell/dialog-state.svelte';
+  import { askText } from '../../shell/dialog-state.svelte';
   import Icon from '../../shell/Icon.svelte';
   import { icons } from '../../shell/icons';
   import { replaceRoute, route } from '../../shell/route.svelte';
@@ -24,6 +24,22 @@
   const restored = loadSession();
   let input = $state(restored.input);
   let steps: StepInstance[] = $state(restored.steps);
+  // The template this chain was loaded from or saved as. A deleted template counts as unlinked.
+  let templateId: string | undefined = $state(restored.templateId);
+  const linked = $derived.by(() => {
+    const t = templateId ? templates.get(templateId) : undefined;
+    return t?.tool === TOOL ? t : undefined;
+  });
+
+  // Compares what a template stores: type, options and enabled state, in order.
+  function signature(list: StepInstance[]): string {
+    return JSON.stringify(list.map(({ type, options, enabled }) => ({ type, options, enabled })));
+  }
+
+  const unsaved = $derived.by(() => {
+    const saved = linked ? instantiate(linked) : null;
+    return saved !== null && signature(saved) !== signature(steps);
+  });
 
   // Typing is debounced; chain and option edits recompute immediately.
   let evalInput = $state(restored.input);
@@ -38,7 +54,7 @@
 
   const saver = createSessionSaver();
   $effect(() => {
-    saver.save({ input, steps: $state.snapshot(steps) });
+    saver.save({ input, steps: $state.snapshot(steps), templateId });
   });
   addEventListener('pagehide', saver.flush);
   onDestroy(() => {
@@ -105,7 +121,14 @@
     evalInput = value;
   }
 
-  async function saveAsTemplate() {
+  function saveFailed() {
+    showToast("Couldn't save the template: browser storage is full or blocked.", {
+      tone: 'error',
+    });
+  }
+
+  // An existing name is replaced without asking; the chain links to the saved template.
+  async function saveAs() {
     const name = await askText({
       title: 'Save as template',
       label: 'Template name',
@@ -113,22 +136,30 @@
       validate: (v) => (v.trim() ? null : 'Enter a name.'),
     });
     if (name === null) return;
-    const snapshot = $state.snapshot(steps);
-    let r = templates.save(TOOL, name, snapshot);
-    if (!r.ok && r.reason === 'exists') {
-      const replace = await askConfirm({
-        title: 'Replace template?',
-        message: `A template named "${r.existing.name}" already exists. Replace it with the current chain?`,
-        confirmLabel: 'Replace',
-      });
-      if (!replace) return;
-      r = templates.save(TOOL, name, snapshot, true);
-    }
+    const r = templates.save(TOOL, name, $state.snapshot(steps), true);
+    if (!r.ok) return saveFailed();
+    templateId = r.template.id;
+    showToast(`Saved "${r.template.name}"`);
+  }
+
+  function save() {
+    if (!linked) return saveAs();
+    const r = templates.save(TOOL, linked.name, $state.snapshot(steps), true);
     if (r.ok) showToast(`Saved "${r.template.name}"`);
-    else
-      showToast("Couldn't save the template: browser storage is full or blocked.", {
-        tone: 'error',
-      });
+    else saveFailed();
+  }
+
+  function newChain() {
+    const previous = { steps: $state.snapshot(steps), templateId };
+    steps = [];
+    templateId = undefined;
+    showToast('Started a new chain', {
+      duration: UNDO_MS,
+      action: {
+        label: 'Undo',
+        run: () => ({ steps, templateId } = previous),
+      },
+    });
   }
 
   function loadTemplate(id: string) {
@@ -144,11 +175,12 @@
       });
       return;
     }
-    const previous = $state.snapshot(steps);
+    const previous = { steps: $state.snapshot(steps), templateId };
     steps = loaded;
+    templateId = t.id;
     showToast(`Loaded "${t.name}"`, {
       duration: UNDO_MS,
-      action: { label: 'Undo', run: () => (steps = previous) },
+      action: { label: 'Undo', run: () => ({ steps, templateId } = previous) },
     });
   }
 
@@ -170,13 +202,31 @@
       >{steps.length}
       {steps.length === 1 ? 'step' : 'steps'}</span
     >
+    {#if unsaved}
+      <span class="unsaved" data-testid="unsaved"
+        ><span class="dot" aria-hidden="true"></span>Unsaved</span
+      >
+    {/if}
     <span class="spacer"></span>
+    <button
+      class="btn"
+      disabled={steps.length === 0 && !linked}
+      onclick={newChain}
+      data-testid="new-chain"><Icon d={icons.plus} size={15} /> New</button
+    >
     <button
       class="btn"
       disabled={steps.length === 0}
       title={steps.length === 0 ? 'Add a step first' : undefined}
-      onclick={saveAsTemplate}
-      data-testid="save-template"><Icon d={icons.save} size={15} /> Save as template</button
+      onclick={save}
+      data-testid="save"><Icon d={icons.save} size={15} /> Save</button
+    >
+    <button
+      class="btn"
+      disabled={steps.length === 0}
+      title={steps.length === 0 ? 'Add a step first' : undefined}
+      onclick={saveAs}
+      data-testid="save-as">Save as…</button
     >
   </div>
 
@@ -254,6 +304,19 @@
   .count {
     color: var(--text-muted);
     font-size: var(--text-sm);
+  }
+  .unsaved {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
+    color: var(--text-muted);
+    font-size: var(--text-sm);
+  }
+  .dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--accent);
   }
   .spacer {
     flex: 1;
