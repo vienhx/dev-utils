@@ -55,7 +55,7 @@
 - [x] 8.1 Add Playwright tests for the main flows (build chain → output, error stops chain, reorder, peek, copy/swap, reload restore, template save, open from sidebar, Undo, rename/delete from the sidebar menu, `?template=` link, unknown route redirect), and verify `pnpm test:e2e` passes
 - [x] 8.2 Add Playwright privacy and layout tests: no requests after load while using the app, every page-load request is same-origin, a `fetch` from the page is blocked by CSP, the app works with the network offline after load, there is no horizontal scroll at 375 px, the mobile drawer opens and closes, the desktop rail collapse persists across reloads, and three columns show at 1440 px, and verify `pnpm test:e2e` passes
 - [x] 8.3 Run `pnpm verify` and `pnpm test:e2e` on the finished app, and verify both pass, including the bundle budget
-- [ ] 8.4 Write README usage, local dev, test, and Vercel deploy instructions, and verify the documented commands run as written on a clean clone
+- [x] 8.4 Write README usage, local dev, test, and Vercel deploy instructions, and verify the documented commands run as written on a clean clone
 
 ## Workflow follow-up
 
