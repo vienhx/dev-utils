@@ -14,7 +14,12 @@
     "typecheck": "svelte-check --tsconfig ./tsconfig.json --fail-on-warnings && tsc -p tsconfig.node.json",
     "lint": "eslint . && prettier --check .",
     "format": "prettier --write .",
-    "test": "vitest run --passWithNoTests"
+    "test": "vitest run",
+    "test:e2e": "vite build && playwright test",
+    "serve": "node scripts/serve.mjs dist",
+    "size": "node scripts/size.mjs",
+    "check:dist": "node scripts/check-dist.mjs dist",
+    "verify": "pnpm typecheck && pnpm lint && pnpm test && pnpm build && pnpm size && pnpm check:dist"
   },
   "pnpm": {
     "onlyBuiltDependencies": []

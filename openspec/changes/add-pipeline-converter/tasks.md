@@ -44,11 +44,11 @@
 
 ## 7. Privacy, budget, and deploy checks
 
-- [ ] 7.1 Add `vercel.json` with the CSP and security headers from design.md, and verify the deployed headers match the design when served by the 7.2 test server
-- [ ] 7.2 Add a Playwright test server that serves `dist/` with the headers parsed from `vercel.json`, and verify a smoke test loads the page with zero CSP violations in the console
-- [ ] 7.3 Add the `pnpm size` budget script (60 KB gzip initial JS+CSS, 30 KB per lazy tool chunk, based on the Vite manifest), and verify it passes on the current build and fails when a budget is temporarily set below the actual size
-- [ ] 7.4 Add the `pnpm check:dist` scan (inline script/style, third-party URLs, tracker names), and verify it passes on the current build and fails on a fixture `dist/` that contains a third-party script tag
-- [ ] 7.5 Add `pnpm verify` (typecheck, lint, test, build, size, check:dist), and verify it exits 0 on a clean checkout
+- [x] 7.1 Add `vercel.json` with the CSP and security headers from design.md, and verify the deployed headers match the design when served by the 7.2 test server
+- [x] 7.2 Add a Playwright test server that serves `dist/` with the headers parsed from `vercel.json`, and verify a smoke test loads the page with zero CSP violations in the console
+- [x] 7.3 Add the `pnpm size` budget script (60 KB gzip initial JS+CSS, 30 KB per lazy tool chunk, based on the Vite manifest), and verify it passes on the current build and fails when a budget is temporarily set below the actual size
+- [x] 7.4 Add the `pnpm check:dist` scan (inline script/style, third-party URLs, tracker names), and verify it passes on the current build and fails on a fixture `dist/` that contains a third-party script tag
+- [x] 7.5 Add `pnpm verify` (typecheck, lint, test, build, size, check:dist), and verify it exits 0 on a clean checkout
 
 ## 8. End-to-end verification
 
