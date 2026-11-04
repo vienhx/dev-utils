@@ -15,8 +15,8 @@
 
 - [x] 3.1 Implement the lossless JSON tokenizer with line/column errors, and verify table-driven tests cover RFC 8259 edge cases and agree with `JSON.parse` on validity across a fixture corpus
 - [x] 3.2 Implement the JSON validate, compact, and format steps (indent 2/4/tab), including byte input, and verify unit tests match every scenario in `specs/text-converters` (key order, large integers, UTF-8 errors)
-- [ ] 3.3 Implement the Base64 codec and the encode (standard / URL-safe) and decode steps, and verify unit tests match every Base64 scenario in `specs/text-converters` (Unicode, whitespace, mixed alphabet, invalid char, impossible length, empty input)
-- [ ] 3.4 Register all five steps with names and picker keywords (for example `b64`, `pretty`, `minify`), and verify a registry test asserts every step type is unique and has defaults that satisfy its option fields
+- [x] 3.3 Implement the Base64 codec and the encode (standard / URL-safe) and decode steps, and verify unit tests match every Base64 scenario in `specs/text-converters` (Unicode, whitespace, mixed alphabet, invalid char, impossible length, empty input)
+- [x] 3.4 Register all five steps with names and picker keywords (for example `b64`, `pretty`, `minify`), and verify a registry test asserts every step type is unique and has defaults that satisfy its option fields
 
 ## 4. Persistence
 
