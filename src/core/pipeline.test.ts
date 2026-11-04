@@ -157,3 +157,24 @@ describe('evaluate', () => {
     });
   }
 });
+
+describe('text options', () => {
+  it('decodes escapes for the step and keeps the typed form on the instance', () => {
+    let seen = '';
+    const join: StepDef = {
+      type: 'test.text',
+      name: 'Text',
+      keywords: [],
+      defaults: { sep: ',' },
+      options: [{ kind: 'text', key: 'sep', label: 'Sep', maxLength: 100 }],
+      run: (v, o) => {
+        seen = String(o.sep);
+        return { ok: true, value: v };
+      },
+    };
+    const s = step('test.text', true, { sep: '\\t' });
+    evaluate(t('a'), [s], () => join);
+    expect(seen).toBe('\t');
+    expect(s.options).toEqual({ sep: '\\t' });
+  });
+});
