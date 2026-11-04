@@ -14,6 +14,7 @@ context: |
   Prefer platform APIs; add a third-party library only when really needed, and justify it with its size cost.
   Any library (runtime or dev) must have no tracking, tracing, telemetry, or network access, including install scripts.
   Never loosen the production CSP to accommodate a library. Full rules are in CLAUDE.md.
+  Specs in openspec/specs are the source of truth for behaviour; docs/ holds feature flows, architecture and decisions. Start at docs/README.md and follow docs/RULES.md; read docs/WRITING.md before changing docs.
 
 # Per-artifact rules (optional)
 # Add custom rules for specific artifacts.
@@ -36,3 +37,17 @@ context: |
 #     archive:
 #       guidance:
 #         - Summarize the archive outcome before finishing
+
+rules:
+  proposal:
+    - "Besides Capabilities, list Docs to update: the feature docs and tech docs this change creates or updates, each marked new or updated."
+  design:
+    - "Write each significant decision here, naming the tech doc whose Decisions table will hold it once built (usually tech/architecture.md), and list that doc under Docs to update."
+  tasks:
+    - "Update each doc under Docs to update in the task group whose code it describes, including its Decisions rows, code maps and implementation maps; a decision enters a tech doc only with the code that implements it."
+
+operations:
+  archive:
+    guidance:
+      - "Archive with openspec archive <change> so delta specs merge into openspec/specs."
+      - "Before archiving, check the Docs to update match the final code, code paths in docs exist, docs/README.md indexes every new spec and other doc, and the Features table in docs/overview.md lists every new feature doc."

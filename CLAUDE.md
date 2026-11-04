@@ -28,3 +28,7 @@ Overrides the global commit-message rule for this repo.
 - Subject: imperative, lower-case first letter, no trailing period, ≤ 72 chars total.
 - Scope (optional): the area touched, e.g. `pipeline`, `json`, `base64`, `storage`, `shell`, `chain`, `e2e`, `openspec`.
 - No branch-name prefix. No trailers (no `Co-Authored-By`).
+
+## Docs
+
+@docs/RULES.md
