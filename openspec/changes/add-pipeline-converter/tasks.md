@@ -20,9 +20,9 @@
 
 ## 4. Persistence
 
-- [ ] 4.1 Implement versioned session storage (`devutils:v1:session`) with debounced save and safe fallback on corrupt or unavailable storage, and verify unit tests cover save, restore, corrupt JSON, and a throwing `localStorage`
-- [ ] 4.2 Implement template storage with the `tool` field: save, overwrite by case-insensitive trimmed name within a tool, rename (reject duplicates), delete, list by tool newest first, mark unknown step types as unavailable, and deep-copy on load, and verify unit tests cover each `specs/pipeline-templates` scenario at the storage level
-- [ ] 4.3 Implement UI prefs storage (`devutils:v1:prefs`: sidebar collapsed, expanded tools) with a safe fallback, and verify unit tests cover save, restore, and corrupt data
+- [x] 4.1 Implement versioned session storage (`devutils:v1:session`) with debounced save and safe fallback on corrupt or unavailable storage, and verify unit tests cover save, restore, corrupt JSON, and a throwing `localStorage`
+- [x] 4.2 Implement template storage with the `tool` field: save, overwrite by case-insensitive trimmed name within a tool, rename (reject duplicates), delete, list by tool newest first, mark unknown step types as unavailable, and deep-copy on load, and verify unit tests cover each `specs/pipeline-templates` scenario at the storage level
+- [x] 4.3 Implement UI prefs storage (`devutils:v1:prefs`: sidebar collapsed, expanded tools) with a safe fallback, and verify unit tests cover save, restore, and corrupt data
 
 ## 5. App shell and navigation
 
