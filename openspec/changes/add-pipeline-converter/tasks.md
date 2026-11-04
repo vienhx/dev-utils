@@ -26,11 +26,11 @@
 
 ## 5. App shell and navigation
 
-- [ ] 5.1 Implement the hash router (parse `#/<tool>?params`, `hashchange`, redirect empty or unknown routes to `#/chain`, `replaceState` helper), and verify table-driven unit tests cover root, known, unknown, and query-param routes
-- [ ] 5.2 Implement the tool registry with Chain as the default tool (lazy component) and the shell layout (sidebar + route outlet), and verify by hand that `#/chain` renders Chain and back/forward works
-- [ ] 5.3 Build the sidebar: tool list with active highlight, expandable template list per tool (newest first, empty hint, remembered expanded state), template links to `#/chain?template=<id>`, and a row menu with rename and delete (confirmation, duplicate-name rejection), and verify by hand against `specs/app-navigation` and the rename/delete scenarios in `specs/pipeline-templates`
-- [ ] 5.4 Build the desktop collapse to a 56 px icon rail (remembered across reloads) with a template flyout on hover or focus, and the mobile drawer under 768 px (menu button, backdrop, Escape, close on navigate), and verify by hand at 375 px and 1440 px
-- [ ] 5.5 Add keyboard and ARIA support to the sidebar (`aria-expanded` on collapse and section toggles, focus management in the drawer and flyout), and verify by hand by tabbing through the sidebar and opening a template with Enter
+- [x] 5.1 Implement the hash router (parse `#/<tool>?params`, `hashchange`, redirect empty or unknown routes to `#/chain`, `replaceState` helper), and verify table-driven unit tests cover root, known, unknown, and query-param routes
+- [x] 5.2 Implement the tool registry with Chain as the default tool (lazy component) and the shell layout (sidebar + route outlet), and verify by hand that `#/chain` renders Chain and back/forward works
+- [x] 5.3 Build the sidebar: tool list with active highlight, expandable template list per tool (newest first, empty hint, remembered expanded state), template links to `#/chain?template=<id>`, and a row menu with rename and delete (confirmation, duplicate-name rejection), and verify by hand against `specs/app-navigation` and the rename/delete scenarios in `specs/pipeline-templates`
+- [x] 5.4 Build the desktop collapse to a 56 px icon rail (remembered across reloads) with a template flyout on hover or focus, and the mobile drawer under 768 px (menu button, backdrop, Escape, close on navigate), and verify by hand at 375 px and 1440 px
+- [x] 5.5 Add keyboard and ARIA support to the sidebar (`aria-expanded` on collapse and section toggles, focus management in the drawer and flyout), and verify by hand by tabbing through the sidebar and opening a template with Enter
 
 ## 6. Chain tool UI
 
