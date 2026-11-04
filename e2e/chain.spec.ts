@@ -27,6 +27,21 @@ test('builds a chain with the picker and shows output live', async ({ page }) =>
   await expect(page.getByTestId('output')).toHaveValue('{\n    "a": 1\n}');
 });
 
+test('line steps turn a pasted list into an array literal', async ({ page }) => {
+  await addStep(page, 'quote lines');
+  await addStep(page, 'join lines');
+  await addStep(page, 'text.wrap');
+  await expect(stepNames(page)).toHaveText(['Quote lines', 'Join lines', 'Wrap']);
+  await setInput(page, 'a\nb\nc');
+  const output = page.getByTestId('output');
+  await expect(output).toHaveValue('["a", "b", "c"]');
+
+  const separator = page.getByTestId('step').nth(1).getByLabel('Separator');
+  await separator.fill('\\t');
+  await expect(output).toHaveValue('["a"\t"b"\t"c"]');
+  await expect(separator).toHaveValue('\\t');
+});
+
 test('typing updates the output within 300 ms', async ({ page }) => {
   await addStep(page, 'b64 enc');
   await page.getByTestId('input').pressSequentially('abc');

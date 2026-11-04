@@ -6,7 +6,7 @@
 
 dev-utils is a private set of developer utilities that runs entirely in the browser. It has no backend and no tracking, and the CSP blocks all runtime network requests, so pasted data never leaves the page. It is deployed as static files to Vercel.
 
-The only tool today is **Chain**: the user pastes text, builds an ordered chain of transform steps (JSON, Base64), and sees the output live. Chains can be saved as templates.
+The only tool today is **Chain**: the user pastes text, builds an ordered chain of transform steps (JSON, Base64, line lists such as dedupe, quote, join and wrap), and sees the output live. Chains can be saved as templates.
 
 ## Goals
 

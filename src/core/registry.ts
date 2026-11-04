@@ -5,6 +5,10 @@ import { jsonEscape } from '../steps/json/escape';
 import { jsonFormat } from '../steps/json/format';
 import { jsonUnescape } from '../steps/json/unescape';
 import { jsonValidate } from '../steps/json/validate';
+import { linesDedupe } from '../steps/lines/dedupe';
+import { linesJoin } from '../steps/lines/join';
+import { linesQuote } from '../steps/lines/quote';
+import { textWrap } from '../steps/lines/wrap';
 import type { StepDef } from './step';
 
 /** Every step the app knows, in picker order. Adding a step means one file plus one entry here. */
@@ -16,6 +20,10 @@ export const steps: readonly StepDef[] = [
   jsonUnescape,
   base64Encode,
   base64Decode,
+  linesDedupe,
+  linesQuote,
+  linesJoin,
+  textWrap,
 ];
 
 const byType = new Map(steps.map((s) => [s.type, s]));
