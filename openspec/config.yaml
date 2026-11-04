@@ -1,0 +1,38 @@
+schema: spec-driven
+
+# Project context (optional)
+# Add only constraints that should guide OpenSpec artifacts and workflows.
+# Include constraints an agent cannot infer by reading the code.
+# Keep general project documentation and discoverable codebase facts out.
+# Example:
+#   context: |
+#     Designs and tasks must cover Windows, macOS, and Linux
+#     Write all artifacts in Spanish
+context: |
+  Client-only static app: no backend, no runtime network requests, no tracking or telemetry.
+  Bundle budget: initial load <= 60 KB gzip JS+CSS (fonts excluded); each lazy tool chunk <= 30 KB gzip.
+  Prefer platform APIs; add a third-party library only when really needed, and justify it with its size cost.
+  Any library (runtime or dev) must have no tracking, tracing, telemetry, or network access, including install scripts.
+  Never loosen the production CSP to accommodate a library. Full rules are in CLAUDE.md.
+
+# Per-artifact rules (optional)
+# Add custom rules for specific artifacts.
+# Example:
+#   rules:
+#     proposal:
+#       - Keep proposals under 500 words
+#       - Always state what is out of scope
+#     tasks:
+#       - Break tasks into chunks of max 2 hours
+
+# Per-operation guidance (optional)
+# Add advisory guidance for how apply and archive work should be conducted.
+# This is separate from artifact rules above.
+# Example:
+#   operations:
+#     apply:
+#       guidance:
+#         - Keep test summaries concise
+#     archive:
+#       guidance:
+#         - Summarize the archive outcome before finishing
