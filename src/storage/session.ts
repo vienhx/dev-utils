@@ -5,7 +5,8 @@ import { isRecord, readJSON, writeJSON } from './local';
 export const SESSION_KEY = 'devutils:v1:session';
 export const SESSION_SAVE_DELAY = 300;
 
-export type Session = { input: string; steps: StepInstance[] };
+/** `templateId` links the chain to the template it was loaded from or saved as. */
+export type Session = { input: string; steps: StepInstance[]; templateId?: string };
 
 export function emptySession(): Session {
   return { input: '', steps: [] };
@@ -29,13 +30,15 @@ export function loadSession(): Session {
       enabled: raw.enabled !== false,
     });
   }
-  return { input: data.input, steps };
+  const templateId = typeof data.templateId === 'string' ? data.templateId : undefined;
+  return { input: data.input, steps, templateId };
 }
 
 export function saveSession(session: Session): boolean {
   return writeJSON(SESSION_KEY, {
     input: session.input,
     steps: session.steps.map(({ type, options, enabled }) => ({ type, options, enabled })),
+    templateId: session.templateId,
   });
 }
 

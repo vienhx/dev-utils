@@ -45,9 +45,9 @@ export async function setInput(page: Page, value: string): Promise<void> {
   await page.getByTestId('input').fill(value);
 }
 
-/** Saves the current chain as a template, confirming overwrite if asked. */
+/** Saves the current chain as a template with Save as; an existing name is replaced. */
 export async function saveTemplate(page: Page, name: string): Promise<void> {
-  await page.getByTestId('save-template').click();
+  await page.getByTestId('save-as').click();
   const dialog = page.getByTestId('dialog');
   await dialog.locator('input').fill(name);
   await dialog.locator('input').press('Enter');

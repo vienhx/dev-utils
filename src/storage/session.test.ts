@@ -36,6 +36,23 @@ describe('session storage', () => {
     expect(restored.steps.every((s) => typeof s.id === 'string' && s.id)).toBe(true);
   });
 
+  const links: { name: string; stored: unknown; want: string | undefined }[] = [
+    { name: 'a string id', stored: 'abc-123', want: 'abc-123' },
+    { name: 'a missing id', stored: undefined, want: undefined },
+    { name: 'a non-string id', stored: 42, want: undefined },
+  ];
+  for (const tt of links) {
+    it(`restores the template link for ${tt.name}`, () => {
+      store.setItem(SESSION_KEY, JSON.stringify({ input: '', steps: [], templateId: tt.stored }));
+      expect(loadSession().templateId).toBe(tt.want);
+    });
+  }
+
+  it('round-trips the template link', () => {
+    expect(saveSession({ input: '', steps: [], templateId: 'abc-123' })).toBe(true);
+    expect(loadSession().templateId).toBe('abc-123');
+  });
+
   const fallbacks: { name: string; raw: string | null }[] = [
     { name: 'nothing saved', raw: null },
     { name: 'corrupt JSON', raw: '{not json' },

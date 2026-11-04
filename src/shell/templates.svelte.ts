@@ -1,6 +1,7 @@
 import type { StepInstance } from '../core/step';
 import {
   deleteTemplate,
+  getTemplate,
   listTemplates,
   renameTemplate,
   saveTemplate,
@@ -28,6 +29,10 @@ export const templates = {
   list(tool: string): TemplateEntry[] {
     void version;
     return listTemplates(tool);
+  },
+  get(id: string): TemplateEntry | undefined {
+    void version;
+    return getTemplate(id);
   },
   save(tool: string, name: string, steps: StepInstance[], overwrite = false): SaveResult {
     const r = saveTemplate(tool, name, steps, { overwrite });
