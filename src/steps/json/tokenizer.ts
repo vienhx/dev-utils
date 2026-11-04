@@ -55,29 +55,28 @@ function describe(c: string): string {
   return `'${String.fromCodePoint(code)}'`;
 }
 
+/** Index after the character or escape at `i`. Throws on invalid escapes and raw control characters. */
+function readChar(src: string, i: number): number {
+  const c = src[i] as string;
+  if (c === '\\') {
+    const e = src[i + 1];
+    if (e === 'u') {
+      HEX4.lastIndex = i + 2;
+      if (!HEX4.test(src)) throw new JsonError('Invalid \\u escape in string', i);
+      return i + 6;
+    }
+    if (e !== undefined && ESCAPES.has(e)) return i + 2;
+    throw new JsonError(e === undefined ? 'Unterminated string' : 'Invalid escape in string', i);
+  }
+  if (c.charCodeAt(0) < 0x20) throw new JsonError('Unescaped control character in string', i);
+  return i + 1;
+}
+
 function readString(src: string, start: number): number {
   let i = start + 1;
   while (i < src.length) {
-    const c = src[i] as string;
-    if (c === '"') return i + 1;
-    if (c === '\\') {
-      const e = src[i + 1];
-      if (e === 'u') {
-        HEX4.lastIndex = i + 2;
-        if (!HEX4.test(src)) throw new JsonError('Invalid \\u escape in string', i);
-        i += 6;
-      } else if (e !== undefined && ESCAPES.has(e)) {
-        i += 2;
-      } else {
-        throw new JsonError(
-          e === undefined ? 'Unterminated string' : 'Invalid escape in string',
-          i,
-        );
-      }
-      continue;
-    }
-    if (c.charCodeAt(0) < 0x20) throw new JsonError('Unescaped control character in string', i);
-    i += 1;
+    if (src[i] === '"') return i + 1;
+    i = readChar(src, i);
   }
   throw new JsonError('Unterminated string', start);
 }
@@ -189,13 +188,38 @@ function scan(src: string): Token[] {
   }
 }
 
+/** Turns a JsonError into a message with line and column in `src`, where offsets start at `base`. */
+function failure(e: unknown, src: string, base: number): { ok: false; error: string } {
+  if (!(e instanceof JsonError)) throw e;
+  const { line, column } = position(src, base + e.offset);
+  return { ok: false, error: `${e.message} at line ${line}, column ${column}` };
+}
+
 /** Validates JSON text and returns its significant tokens, or an error with line and column. */
 export function tokenize(src: string): TokenizeResult {
   try {
     return { ok: true, tokens: scan(src) };
   } catch (e) {
-    if (!(e instanceof JsonError)) throw e;
-    const { line, column } = position(src, e.offset);
-    return { ok: false, error: `${e.message} at line ${line}, column ${column}` };
+    return failure(e, src, 0);
+  }
+}
+
+/**
+ * Validates the content of a JSON string given without its surrounding quotes.
+ * Errors give the line and column in `src`, where the content starts at offset `base`.
+ */
+export function scanStringContent(
+  content: string,
+  src: string,
+  base: number,
+): { ok: true } | { ok: false; error: string } {
+  try {
+    for (let i = 0; i < content.length;) {
+      if (content[i] === '"') throw new JsonError('Unescaped quote in string', i);
+      i = readChar(content, i);
+    }
+    return { ok: true };
+  } catch (e) {
+    return failure(e, src, base);
   }
 }

@@ -62,6 +62,24 @@ describe('built-in chains', () => {
       steps: chain(['json.format', { indent: '4' }]),
       want: { kind: 'text', text: '{\n    "a": 1\n}' },
     },
+    {
+      name: 'double-escaped JSON unescaped twice then formatted',
+      input: '"\\"{\\\\\\"a\\\\\\":1}\\""',
+      steps: chain('json.unescape', 'json.unescape', 'json.format'),
+      want: { kind: 'text', text: '{\n  "a": 1\n}' },
+    },
+    {
+      name: 'Base64 decode then JSON unescape',
+      input: 'ImFcbmIi',
+      steps: chain('base64.decode', 'json.unescape'),
+      want: { kind: 'text', text: 'a\nb' },
+    },
+    {
+      name: 'binary into JSON escape fails',
+      input: '/9j/4A==',
+      steps: chain('base64.decode', 'json.escape'),
+      want: { error: NOT_UTF8, index: 1 },
+    },
   ];
 
   for (const tt of tests) {

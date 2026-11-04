@@ -7,7 +7,7 @@ Private, client-only developer utilities. Everything runs in your browser. There
 The first tool is **Chain**. Paste text into **Input**, add steps, and read the result in **Output**. The output updates as you type.
 
 - **Add a step** with the _Add step_ button, or press <kbd>Ctrl</kbd>/<kbd>⌘</kbd>+<kbd>K</kbd> and type part of its name (for example `b64 dec` or `pretty`), then press <kbd>Enter</kbd>.
-- **Built-in steps:** JSON format (2 spaces, 4 spaces, or tab), JSON compact, JSON validate, Base64 encode (standard or URL-safe), and Base64 decode.
+- **Built-in steps:** JSON format (2 spaces, 4 spaces, or tab), JSON compact, JSON validate, JSON escape (quotes included or omitted), JSON unescape, Base64 encode (standard or URL-safe), and Base64 decode.
 - **Edit the chain:** reorder with the arrow buttons or by dragging the handle, turn a step off with _Enabled_, remove it with ✕, and click the eye icon to peek at that step's output.
 - **Errors:** a failing step shows its error, later steps are marked _skipped_, and the output shows the error.
 - **Binary output** that isn't valid UTF-8 is shown as `binary, N bytes` with a hex preview.

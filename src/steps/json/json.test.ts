@@ -2,7 +2,9 @@ import { describe, expect, it } from 'vitest';
 import type { StepDef, StepOptions } from '../../core/step';
 import { NOT_UTF8, bytes, text, type Value } from '../../core/value';
 import { jsonCompact } from './compact';
+import { jsonEscape } from './escape';
 import { jsonFormat } from './format';
+import { jsonUnescape } from './unescape';
 import { jsonValidate } from './validate';
 
 const enc = new TextEncoder();
@@ -117,6 +119,122 @@ describe('JSON steps', () => {
       input: bytes(new Uint8Array([0x80])),
       want: { error: NOT_UTF8 },
     },
+    {
+      name: 'escape with quotes by default',
+      def: jsonEscape,
+      input: text('say "hi"\n'),
+      want: { value: text('"say \\"hi\\"\\n"') },
+    },
+    {
+      name: 'escape without quotes',
+      def: jsonEscape,
+      input: text('a\\b\t'),
+      opts: { quotes: 'omit' },
+      want: { value: text('a\\\\b\\t') },
+    },
+    {
+      name: 'escape keeps non-ASCII',
+      def: jsonEscape,
+      input: text('héllo 👋'),
+      want: { value: text('"héllo 👋"') },
+    },
+    {
+      name: 'escape empty with quotes',
+      def: jsonEscape,
+      input: text(''),
+      want: { value: text('""') },
+    },
+    {
+      name: 'escape empty without quotes',
+      def: jsonEscape,
+      input: text(''),
+      opts: { quotes: 'omit' },
+      want: { value: text('') },
+    },
+    {
+      name: 'escape does not trim',
+      def: jsonEscape,
+      input: text(' a '),
+      want: { value: text('" a "') },
+    },
+    {
+      name: 'escape rejects non-UTF-8 bytes',
+      def: jsonEscape,
+      input: bytes(new Uint8Array([0xff, 0xd8, 0xff, 0xe0])),
+      want: { error: NOT_UTF8 },
+    },
+    {
+      name: 'unescape quoted literal',
+      def: jsonUnescape,
+      input: text('"{\\"a\\":1}"'),
+      want: { value: text('{"a":1}') },
+    },
+    {
+      name: 'unescape without quotes',
+      def: jsonUnescape,
+      input: text('line1\\nline2 é'),
+      want: { value: text('line1\nline2 é') },
+    },
+    {
+      name: 'unescape ignores surrounding whitespace',
+      def: jsonUnescape,
+      input: text('"a\\tb"\n'),
+      want: { value: text('a\tb') },
+    },
+    {
+      name: 'unescape empty input',
+      def: jsonUnescape,
+      input: text(''),
+      want: { value: text('') },
+    },
+    {
+      name: 'unescape whitespace-only input',
+      def: jsonUnescape,
+      input: text(' \n\t '),
+      want: { value: text('') },
+    },
+    {
+      name: 'unescape invalid escape',
+      def: jsonUnescape,
+      input: text('"a\\x"'),
+      want: { error: 'Invalid escape in string at line 1, column 3' },
+    },
+    {
+      name: 'unescape raw quote in content without quotes',
+      def: jsonUnescape,
+      input: text('{"a":1}'),
+      want: { error: 'Unescaped quote in string at line 1, column 2' },
+    },
+    {
+      name: 'unescape content after closing quote',
+      def: jsonUnescape,
+      input: text('"a" b'),
+      want: { error: /line 1, column 5/ },
+    },
+    {
+      name: 'unescape missing closing quote',
+      def: jsonUnescape,
+      input: text('"abc'),
+      want: { error: /^Unterminated string/ },
+    },
+    {
+      name: 'unescape reports position in original input',
+      def: jsonUnescape,
+      input: text('\n  a\\x'),
+      want: { error: 'Invalid escape in string at line 2, column 4' },
+    },
+    {
+      name: 'unescape decodes UTF-8 bytes',
+      def: jsonUnescape,
+      input: bytes(enc.encode('"a\\nb"')),
+      want: { value: text('a\nb') },
+    },
+    {
+      name: 'unescape rejects non-UTF-8 bytes',
+      def: jsonUnescape,
+      input: bytes(new Uint8Array([0x80])),
+      want: { error: NOT_UTF8 },
+    },
   ];
 
   for (const tt of tests) {
@@ -131,6 +249,17 @@ describe('JSON steps', () => {
           else expect(r.error).toMatch(tt.want.error);
         }
       }
+    });
+  }
+
+  for (const quotes of ['include', 'omit']) {
+    it(`escape then unescape round-trips with quotes ${quotes}`, () => {
+      const input = 'say "hi"\né';
+      const escaped = run(jsonEscape, text(input), { quotes });
+      expect(escaped.ok && run(jsonUnescape, escaped.value)).toEqual({
+        ok: true,
+        value: text(input),
+      });
     });
   }
 
