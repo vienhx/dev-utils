@@ -18,3 +18,13 @@ Client-only developer utilities (Svelte 5 + Vite + TypeScript), deployed as stat
 ## Checks
 
 Run `pnpm verify` (typecheck, lint, unit tests, build, bundle budget, dist scan) before reporting work as done.
+
+## Commits
+
+Overrides the global commit-message rule for this repo.
+
+- Use Conventional Commits: `<type>(<optional-scope>): <subject>`, one line, no body.
+- Types: `feat`, `fix`, `refactor`, `perf`, `test`, `docs`, `build`, `ci`, `chore`, `style`, `revert`. Add `!` after the type or scope for breaking changes.
+- Subject: imperative, lower-case first letter, no trailing period, ≤ 72 chars total.
+- Scope (optional): the area touched, e.g. `pipeline`, `json`, `base64`, `storage`, `shell`, `chain`, `e2e`, `openspec`.
+- No branch-name prefix. No trailers (no `Co-Authored-By`).
