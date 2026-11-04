@@ -3,7 +3,7 @@ import { getStep, steps } from './registry';
 import { fieldAccepts } from './step';
 
 describe('step registry', () => {
-  it('contains the seven built-in steps', () => {
+  it('contains the built-in steps in picker order', () => {
     expect(steps.map((s) => s.type)).toEqual([
       'json.format',
       'json.compact',
@@ -12,6 +12,10 @@ describe('step registry', () => {
       'json.unescape',
       'base64.encode',
       'base64.decode',
+      'lines.dedupe',
+      'lines.quote',
+      'lines.join',
+      'text.wrap',
     ]);
   });
 
@@ -47,6 +51,10 @@ describe('step registry', () => {
     expect(all('json.compact')).toContain('minify');
     expect(all('json.escape')).toEqual(['stringify', 'quote', 'string']);
     expect(all('json.unescape')).toEqual(['unquote', 'unstringify', 'string']);
+    expect(all('lines.dedupe')).toEqual(['unique', 'distinct', 'duplicate']);
+    expect(all('lines.quote')).toEqual(['wrap', 'string', 'escape']);
+    expect(all('lines.join')).toEqual(['compact', 'one line', 'separator', 'csv', 'implode']);
+    expect(all('text.wrap')).toEqual(['array', 'brackets', 'list', 'in']);
   });
 
   it('returns undefined for unknown types', () => {

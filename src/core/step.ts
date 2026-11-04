@@ -18,8 +18,15 @@ export type NumberField = {
   max: number;
 };
 
+export type TextField = {
+  kind: 'text';
+  key: string;
+  label: string;
+  maxLength: number;
+};
+
 /** Declarative option, rendered generically by the step card. */
-export type OptionField = SelectField | NumberField;
+export type OptionField = SelectField | NumberField | TextField;
 
 export type StepOutcome = { ok: true; value: Value } | { ok: false; error: string };
 
@@ -54,6 +61,9 @@ export function fieldAccepts(field: OptionField, value: unknown): value is Optio
   if (field.kind === 'select') {
     return typeof value === 'string' && field.choices.some((c) => c.value === value);
   }
+  if (field.kind === 'text') {
+    return typeof value === 'string' && value.length <= field.maxLength;
+  }
   return (
     typeof value === 'number' && Number.isFinite(value) && value >= field.min && value <= field.max
   );
@@ -68,6 +78,24 @@ export function resolveOptions(
   for (const field of def.options) {
     const v = raw?.[field.key];
     if (fieldAccepts(field, v)) out[field.key] = v;
+  }
+  return out;
+}
+
+const ESCAPES: Record<string, string> = { t: '\t', n: '\n', '\\': '\\' };
+
+/** Reads `\t`, `\n` and `\\` left to right; any other backslash is kept as typed. */
+export function decodeEscapes(s: string): string {
+  let out = '';
+  for (let i = 0; i < s.length; i++) {
+    const c = s[i];
+    const decoded = c === '\\' ? ESCAPES[s[i + 1] ?? ''] : undefined;
+    if (decoded === undefined) {
+      out += c;
+    } else {
+      out += decoded;
+      i += 1;
+    }
   }
   return out;
 }

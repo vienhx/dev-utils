@@ -87,6 +87,20 @@ describe('session storage', () => {
     });
   });
 
+  it('replaces an oversized saved text option with its default', () => {
+    store.setItem(
+      SESSION_KEY,
+      JSON.stringify({
+        input: 'a\nb',
+        steps: [{ type: 'lines.join', options: { separator: 'x'.repeat(150) }, enabled: true }],
+      }),
+    );
+    expect(loadSession().steps[0]).toMatchObject({
+      type: 'lines.join',
+      options: { separator: ', ' },
+    });
+  });
+
   it('survives a throwing localStorage', () => {
     vi.stubGlobal('localStorage', {
       getItem() {

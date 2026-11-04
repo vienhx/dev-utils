@@ -19,7 +19,7 @@ The Chain tool (`#/chain`, the default route) runs input text through an ordered
 ### Evaluate
 
 1. `Chain.svelte` holds `input` and `steps` as `$state`. Input edits reach `evalInput` after a 150 ms debounce; step and option edits apply at once.
-2. `evaluate(text(evalInput), steps)` walks the chain: a disabled step passes its input through; an enabled step's `run` gets the value and options merged by `resolveOptions`.
+2. `evaluate(text(evalInput), steps)` walks the chain: a disabled step passes its input through; an enabled step's `run` gets the value and options merged by `resolveOptions`, with text options passed through `decodeEscapes`.
 3. A step that fails (or throws, or has an unknown `type`) gets `error`; every later step gets `skipped`.
 4. Each `StepCard` shows its result status (`okLabel`, e.g. "valid", or `ok`/`error`/`skipped`/`disabled`); peek shows that step's value.
 5. `OutputBox` shows the final value via `display`: text if it is valid UTF-8, else `binary, N bytes` with a hex preview of the first 256 bytes. On error it shows the error.
@@ -58,6 +58,7 @@ The Chain tool (`#/chain`, the default route) runs input text through an ordered
 - Step `type` ids are stored in sessions and templates; renaming one orphans saved data.
 - Keep `core/` free of Svelte and DOM imports so it stays unit-testable.
 - New steps must fit the lazy chunk budget (`pnpm size`).
+- Text options are stored and shown as typed (`\t`) and decoded only at run time; don't store decoded values.
 
 ## Implementation map
 
@@ -68,6 +69,6 @@ The Chain tool (`#/chain`, the default route) runs input text through an ordered
 | Picker and search, reorder helper          | `src/tools/chain/Picker.svelte`, `filter.ts` `filterSteps`, `moveItem`                                                   |
 | Output, copy, use as input                 | `src/tools/chain/OutputBox.svelte`                                                                                       |
 | Evaluation                                 | `src/core/pipeline.ts` `evaluate`                                                                                        |
-| Steps                                      | `src/core/registry.ts` `steps`, `src/steps/`                                                                             |
+| Steps                                      | `src/core/registry.ts` `steps`, `src/steps/json/`, `src/steps/base64/`, `src/steps/lines/`                               |
 | Session storage                            | `src/storage/session.ts`                                                                                                 |
 | Verification                               | `src/core/*.test.ts`, `src/steps/**/*.test.ts`, `src/storage/session.test.ts`, `e2e/chain.spec.ts`, `e2e/layout.spec.ts` |

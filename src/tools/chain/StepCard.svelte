@@ -87,6 +87,15 @@
                 <option value={c.value}>{c.label}</option>
               {/each}
             </select>
+          {:else if field.kind === 'text'}
+            <input
+              type="text"
+              class="mono"
+              maxlength={field.maxLength}
+              spellcheck="false"
+              autocomplete="off"
+              bind:value={step.options[field.key]}
+            />
           {:else}
             <input
               type="number"
@@ -260,7 +269,8 @@
     color: var(--text-muted);
   }
   select,
-  input[type='number'] {
+  input[type='number'],
+  input[type='text'] {
     padding: 2px var(--space-2);
     border: 1px solid var(--border-strong);
     border-radius: var(--radius-1);
@@ -269,6 +279,9 @@
   }
   input[type='number'] {
     width: 6em;
+  }
+  input[type='text'] {
+    width: 8em;
   }
   .error {
     margin: 0;

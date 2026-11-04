@@ -1,5 +1,6 @@
 import { getStep } from './registry';
 import {
+  decodeEscapes,
   resolveOptions,
   type StepDef,
   type StepInstance,
@@ -18,7 +19,13 @@ type Lookup = (type: string) => StepDef | undefined;
 
 function runStep(def: StepDef, step: StepInstance, input: Value): StepOutcome {
   try {
-    return def.run(input, resolveOptions(def, step.options));
+    const opts = resolveOptions(def, step.options);
+    // Text options are stored as typed; steps get the real characters.
+    for (const field of def.options) {
+      const v = opts[field.key];
+      if (field.kind === 'text' && typeof v === 'string') opts[field.key] = decodeEscapes(v);
+    }
+    return def.run(input, opts);
   } catch (e) {
     return { ok: false, error: e instanceof Error ? e.message : String(e) };
   }
