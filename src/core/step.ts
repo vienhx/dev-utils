@@ -29,6 +29,8 @@ export interface StepDef<O extends StepOptions = StepOptions> {
   name: string;
   /** Extra picker search terms. */
   keywords: string[];
+  /** Status label shown when the step succeeds, e.g. "valid". */
+  okLabel?: string;
   defaults: O;
   options: OptionField[];
   run(input: Value, opts: O): StepOutcome;
