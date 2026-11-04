@@ -9,7 +9,11 @@ describe('filterSteps', () => {
     { query: 'B64', want: ['Base64 encode', 'Base64 decode'] },
     { query: 'pretty', want: ['JSON format'] },
     { query: 'minify', want: ['JSON compact'] },
-    { query: 'json', want: ['JSON format', 'JSON compact', 'JSON validate'] },
+    {
+      query: 'json',
+      want: ['JSON format', 'JSON compact', 'JSON validate', 'JSON escape', 'JSON unescape'],
+    },
+    { query: 'unquote', want: ['JSON unescape'] },
     { query: '  json   valid ', want: ['JSON validate'] },
     { query: 'xml', want: [] },
   ];

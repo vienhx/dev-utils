@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { corpus } from './fixtures/corpus';
-import { position, tokenize } from './tokenizer';
+import { position, scanStringContent, tokenize } from './tokenizer';
 
 function parses(src: string): boolean {
   try {
@@ -101,6 +101,45 @@ describe('position', () => {
   it('handles lone CR line breaks', () => {
     expect(position('a\rb', 2)).toEqual({ line: 2, column: 1 });
   });
+});
+
+describe('scanStringContent', () => {
+  const tests: { name: string; src: string; base?: number; error?: string }[] = [
+    { name: 'valid body', src: 'a\\n\\"b\\u00e9 é' },
+    { name: 'empty body', src: '' },
+    { name: 'invalid escape', src: 'a\\x', error: 'Invalid escape in string at line 1, column 2' },
+    {
+      name: 'bad unicode escape',
+      src: '\\u12g4',
+      error: 'Invalid \\u escape in string at line 1, column 1',
+    },
+    {
+      name: 'raw control character',
+      src: 'a\tb',
+      error: 'Unescaped control character in string at line 1, column 2',
+    },
+    { name: 'raw quote', src: '{"a":1}', error: 'Unescaped quote in string at line 1, column 2' },
+    {
+      name: 'position on line 2',
+      src: '\n  a\\x',
+      base: 3,
+      error: 'Invalid escape in string at line 2, column 4',
+    },
+    {
+      name: 'position after leading whitespace',
+      src: '   ab"',
+      base: 3,
+      error: 'Unescaped quote in string at line 1, column 6',
+    },
+  ];
+
+  for (const tt of tests) {
+    it(tt.name, () => {
+      const base = tt.base ?? 0;
+      const r = scanStringContent(tt.src.slice(base), tt.src, base);
+      expect(r).toEqual(tt.error ? { ok: false, error: tt.error } : { ok: true });
+    });
+  }
 });
 
 describe('tokenize agrees with JSON.parse', () => {

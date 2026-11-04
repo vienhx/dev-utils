@@ -1,7 +1,9 @@
 import { base64Decode } from '../steps/base64/decode';
 import { base64Encode } from '../steps/base64/encode';
 import { jsonCompact } from '../steps/json/compact';
+import { jsonEscape } from '../steps/json/escape';
 import { jsonFormat } from '../steps/json/format';
+import { jsonUnescape } from '../steps/json/unescape';
 import { jsonValidate } from '../steps/json/validate';
 import type { StepDef } from './step';
 
@@ -10,6 +12,8 @@ export const steps: readonly StepDef[] = [
   jsonFormat,
   jsonCompact,
   jsonValidate,
+  jsonEscape,
+  jsonUnescape,
   base64Encode,
   base64Decode,
 ];
