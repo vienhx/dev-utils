@@ -8,6 +8,8 @@ const TEXT = new Set(['.html', '.js', '.mjs', '.css', '.svg', '.json', '.txt', '
 const ALLOWED_URLS = [
   /^http:\/\/www\.w3\.org\/(1999\/xhtml|2000\/svg|1998\/Math\/MathML|1999\/xlink|XML\/1998\/namespace)$/,
   /^https:\/\/svelte\.dev\/e\/[a-z_]+$/,
+  // Sidebar link to the source repo: navigated to on click, never fetched.
+  /^https:\/\/github\.com\/vienhx\/dev-utils$/,
 ];
 
 const TRACKERS =

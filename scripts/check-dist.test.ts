@@ -62,6 +62,16 @@ describe('scanDist', () => {
       want: ['assets/a.css: third-party URL https://fonts.googleapis.com/css2?family=Inter'],
     },
     {
+      name: 'source repository link',
+      files: { 'assets/a.js': 'const repo="https://github.com/vienhx/dev-utils"' },
+      want: [],
+    },
+    {
+      name: 'other GitHub URL',
+      files: { 'assets/a.js': 'import("https://github.com/vienhx/dev-utils/raw/x.js")' },
+      want: ['assets/a.js: third-party URL https://github.com/vienhx/dev-utils/raw/x.js'],
+    },
+    {
       name: 'tracker name',
       files: { 'assets/a.js': 'window.posthog.capture("x")' },
       want: ['assets/a.js: tracker reference "posthog"'],

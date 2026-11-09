@@ -79,3 +79,30 @@ test('rail flyout lists templates on hover and focus', async ({ page }) => {
   await flyout.getByRole('link', { name: 'Flyout' }).click();
   await expect(stepNames(page)).toHaveText(['JSON format']);
 });
+
+const repoCases: {
+  name: string;
+  width: number;
+  collapse?: boolean;
+  drawer?: boolean;
+  label: string;
+}[] = [
+  { name: 'expanded sidebar', width: 1440, label: 'GitHub' },
+  { name: 'collapsed rail', width: 1440, collapse: true, label: 'GitHub repository' },
+  { name: 'mobile drawer', width: 375, drawer: true, label: 'GitHub' },
+];
+
+for (const tc of repoCases) {
+  test(`source repository link in the ${tc.name}`, async ({ page }) => {
+    await page.setViewportSize({ width: tc.width, height: 800 });
+    await page.goto('/#/chain');
+    if (tc.collapse) await page.getByTestId('collapse').click();
+    if (tc.drawer) await page.getByTestId('menu-button').click();
+
+    const link = page.getByTestId('sidebar').getByRole('link', { name: tc.label, exact: true });
+    await expect(link).toBeVisible();
+    await expect(link).toHaveAttribute('href', 'https://github.com/vienhx/dev-utils');
+    await expect(link).toHaveAttribute('target', '_blank');
+    await expect(link).toHaveAttribute('rel', 'noopener noreferrer');
+  });
+}
