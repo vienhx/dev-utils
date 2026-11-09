@@ -158,6 +158,21 @@
       {/if}
     {/each}
   </ul>
+
+  <div class="foot">
+    <a
+      class="repo"
+      href="https://github.com/vienhx/dev-utils"
+      target="_blank"
+      rel="noopener noreferrer"
+      aria-label={mode === 'rail' ? 'GitHub repository' : undefined}
+      title={mode === 'rail' ? 'GitHub repository' : undefined}
+      data-testid="repo-link"
+    >
+      <Icon d={icons.github} size={mode === 'rail' ? 20 : 18} />
+      {#if mode !== 'rail'}<span>GitHub</span>{/if}
+    </a>
+  </div>
 </nav>
 
 <style>
@@ -340,5 +355,37 @@
   }
   .flyout-link.unavailable {
     opacity: 0.6;
+  }
+
+  /* Source link, pinned to the bottom */
+  .foot {
+    margin-top: auto;
+    align-self: stretch;
+    display: flex;
+    justify-content: center;
+    padding-top: var(--space-2);
+    border-top: 1px solid var(--border);
+  }
+  .repo {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding: var(--space-2);
+    border-radius: var(--radius-1);
+    color: var(--text-muted);
+    text-decoration: none;
+    font-size: var(--text-sm);
+  }
+  .repo:hover {
+    background: var(--surface-2);
+    color: var(--text);
+  }
+  .rail .repo {
+    flex: none;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    padding: 0;
   }
 </style>

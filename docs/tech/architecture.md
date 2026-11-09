@@ -64,7 +64,7 @@ Versioned `localStorage` keys holding JSON. Every read and write goes through `r
 
 ## Build checks and deploy
 
-- `pnpm verify` runs typecheck, lint, unit tests, build, `pnpm size` (budget in `scripts/size.mjs`) and `pnpm check:dist` (no inline scripts/styles, third-party URLs or tracker names in `dist/`).
+- `pnpm verify` runs typecheck, lint, unit tests, build, `pnpm size` (budget in `scripts/size.mjs`) and `pnpm check:dist` (no inline scripts/styles, third-party URLs or tracker names in `dist/`; the only allowed external link is the source repository).
 - `pnpm test:e2e` builds and serves `dist/` with the headers from `vercel.json`, so the real CSP is tested.
 - Vercel deploys `master` to production; other branches get previews. CSP and security headers live in `vercel.json`.
 
@@ -85,6 +85,8 @@ Versioned `localStorage` keys holding JSON. Every read and write goes through `r
 | Fonts                | Inter and JetBrains Mono bundled via `@fontsource-variable`                                                                | Keeps `font-src 'self'`, no request to Google, works offline                                    | Google Fonts CDN                                                   |
 | Security             | CSP as a response header in `vercel.json`                                                                                  | `frame-ancestors` only works as a header                                                        | `<meta>` CSP                                                       |
 | Budget checks        | Own `size.mjs` and `check-dist.mjs` scripts                                                                                | A short script is enough                                                                        | `size-limit`                                                       |
+| Source link          | GitHub link pinned to the bottom of `Sidebar`; icon only in the rail                                                       | Desktop has no header and every mode (full, rail, drawer) renders `Sidebar`                     | Icon in the brand row; a new desktop header                        |
+| Dist scan allowlist  | `check-dist.mjs` allows exactly `https://github.com/vienhx/dev-utils`                                                      | It is a navigation link, never fetched; an exact match still catches any other GitHub URL       | Allowing all of `github.com`                                       |
 
 ## Risks
 
